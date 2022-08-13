@@ -11,8 +11,10 @@
         min-width: 200px;
     }
 
-    &-search {
-        margin-right: 0;
+    &-search_container {
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
     }
 }
   

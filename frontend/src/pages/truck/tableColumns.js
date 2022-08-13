@@ -37,10 +37,17 @@ export const TruckTableColumns = (onClickUpdate) => {
       ellipsis: true,
     },
     {
+      title: "Status",
+      key: "status",
+      dataIndex: "status",
+      sorter: (a, b) => a.status.localeCompare(b.status),
+      render: (status) => <h3>{status}</h3>,
+    },
+    {
       key: 'action',
       render: (name) => (
         <Button type="primary" onClick={() => onClickUpdate(name)}>
-          update
+          Update
         </Button>
       ),
     },
