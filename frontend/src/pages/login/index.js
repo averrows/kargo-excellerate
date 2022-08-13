@@ -1,17 +1,19 @@
 import { useCallback } from "react";
-import { Button, Select, Space, Typography } from 'antd';
-import './style.scss';
+import { Button, Select, Space, Typography } from "antd";
+import "./style.scss";
 
 const options = [
-  { label: 'Transporter', value: 'transporter' },
-  { label: 'Shipper', value: 'shipper' },
-]
+  { label: "Transporter", value: "transporter" },
+  { label: "Shipper", value: "shipper" },
+];
 
 // This is mostly cover what ticket #1 is all about
-function App() {
+function Login() {
   const handleLogin = useCallback(() => {
-    {/* YOUR CODE HERE */}
-  })
+    {
+      /* YOUR CODE HERE */
+    }
+  });
   return (
     <div className="login">
       <div className="login-header">
@@ -22,7 +24,9 @@ function App() {
               Log in as <Select placeholder="User" options={options} />
             </div>
             <div>
-              <Button onClick={handleLogin}type="primary">Login</Button>
+              <Button onClick={handleLogin} type="primary">
+                Login
+              </Button>
             </div>
           </Space>
         </div>
@@ -31,4 +35,4 @@ function App() {
   );
 }
 
-export default App;
+export default Login;

@@ -1,24 +1,24 @@
-import './App.scss';
-import 'antd/dist/antd.css';
+import "./App.scss";
+import "antd/dist/antd.css";
+import { Provider } from "react-redux";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import Login from './pages/login';
+import Login from "./pages/login";
+import store from "./reducer";
 
 function App() {
   return (
-    <BrowserRouter>
-      <div className="app">
-        <Routes>
-          <Route path="/login" element={<Login/>}></Route>
-          {/* YOUR CODE HERE */}
+    <Provider store={store}>
+      <BrowserRouter>
+        <div className="app">
+          <Routes>
+            <Route path="/login" element={<Login />}></Route>
+            {/* YOUR CODE HERE */}
 
-          <Route
-            exact
-            path="/"
-            element={<Navigate to="/login" />}
-          />
-        </Routes>
-      </div>
-    </BrowserRouter>
+            <Route exact path="/" element={<Navigate to="/login" />} />
+          </Routes>
+        </div>
+      </BrowserRouter>
+    </Provider>
   );
 }
 
