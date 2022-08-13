@@ -1,5 +1,14 @@
 import { useState } from "react";
-import { Table, Input, Modal, Button, Form, Upload, notification } from "antd";
+import {
+  Table,
+  Input,
+  Modal,
+  Button,
+  Form,
+  Upload,
+  Tooltip,
+  notification,
+} from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import { drivers } from "./mockData";
 import "./style.scss";
@@ -22,7 +31,6 @@ export default function Driver() {
 
   const showModal = () => {
     setIsModalVisible(true);
-    openNotificationWithIcon("warning");
   };
 
   const hideModal = () => {
@@ -35,6 +43,10 @@ export default function Driver() {
   const deactiveDriver = () => {
     console.log(driverId);
     hideModal();
+    notification["success"]({
+      message: "Success",
+      description: `Driver with ID ${driverId} successfully deactivated`,
+    });
   };
 
   const AddDriverModal = () => (
@@ -67,19 +79,21 @@ export default function Driver() {
         >
           <Input />
         </Form.Item>
-        <Form.Item
-          initialValue={inputPhoneNumber}
-          label="Phone Number"
-          name="phone_number"
-          rules={[
-            {
-              required: true,
-              message: "Please input your username!",
-            },
-          ]}
-        >
-          <Input />
-        </Form.Item>
+        <Tooltip title="Driver will receive an SMS on this phone number to register on Driver App">
+          <Form.Item
+            initialValue={inputPhoneNumber}
+            label="Phone Number"
+            name="phone_number"
+            rules={[
+              {
+                required: true,
+                message: "Please input your username!",
+              },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+        </Tooltip>
         <Form.Item label="ID Card" name="id">
           <Upload>
             <Button icon={<UploadOutlined />}>Upload</Button>
@@ -106,14 +120,6 @@ export default function Driver() {
     setInputName(driver.name);
     setInputPhoneNumber(driver.phone_number);
     showModal();
-  };
-
-  const openNotificationWithIcon = (type) => {
-    notification[type]({
-      message: "Warning",
-      description:
-        "driver will receive an SMS on this phone number to register on Driver App",
-    });
   };
 
   return (

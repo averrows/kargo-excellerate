@@ -60,7 +60,7 @@ function Truck() {
             danger
             style={{ marginBottom: margin.medium }}
           >
-            Deactive Driver
+            Deactive Truck
           </Button>
         )}
         <Form.Item

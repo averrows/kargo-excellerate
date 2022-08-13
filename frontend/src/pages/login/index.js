@@ -1,19 +1,10 @@
-import { useCallback, useState } from "react";
-import { Button, Radio, Space } from "antd";
+import { Button, Form, Radio, Space } from "antd";
 import "./style.scss";
 
 // This is mostly cover what ticket #1 is all about
 function Login() {
-  const handleLogin = useCallback(() => {
-    {
-      /* YOUR CODE HERE */
-    }
-  });
-
-  const [setValue] = useState(1);
-
-  const onChange = (e) => {
-    setValue(e.target.value);
+  const onFinish = (values) => {
+    console.log(values)
   };
   
   return (
@@ -22,21 +13,30 @@ function Login() {
         <div className="login-header-wrapper">
           <Space direction="vertical">
             <Space direction="horizontal" align="start" className="login-role">
-              <div className="login-role-text">
-                Role
-              </div>
-              <Radio.Group onChange={onChange}>
-                <Space direction="vertical">
-                  <Radio value={1}>Transporter</Radio>
-                  <Radio value={2}>Shipper</Radio>
-                </Space>
-              </Radio.Group>
+              <Form onFinish={onFinish}>
+                <Form.Item label="Role"
+                  rules={[
+                    {
+                      required: true,
+                      message: 'Pilih role anda terlebih dahulu!'
+                    }
+                  ]}>
+                  <Radio.Group>
+                    <Space direction="vertical">
+                      <Radio value="transporter">Transporter</Radio>
+                      <Radio value="shipper">Shipper</Radio>
+                    </Space>
+                  </Radio.Group>
+                </Form.Item>
+                <Form.Item>
+                  <div>
+                    <Button type="primary" htmlType="submit">
+                      Login
+                    </Button>
+                  </div>
+                </Form.Item>
+              </Form>
             </Space>
-            <div>
-              <Button onClick={handleLogin}>
-                Login
-              </Button>
-            </div>
           </Space>
         </div>
       </div>
