@@ -2,10 +2,12 @@ import { Radio, Space, Table, Tag, Select, Button, Input, Modal, Form, DatePicke
 import React, { useState } from "react";
 import { data } from "./data";
 import { margin, width } from "../../constant";
+import moment from 'moment'
 
 const { Option } = Select;
+ 
 
-const columns = (clickModal) => [
+const columns = (clickModal, shipment) => [
   {
     title: "Shipment",
     dataIndex: "shipment",
@@ -103,7 +105,6 @@ const Shipment = () => {
 
   const [visibleModalAdd, setVisibleModalAdd] = useState(false);
 
-
   const showModalAdd = () => {
     setVisibleModalAdd(true);
   }
@@ -133,6 +134,7 @@ const Shipment = () => {
 
   const onFinish = (values) => {
     console.log('Success:', values);
+    console.log(moment(values.loadingDate).format("DD/MM/YYYY"))
   };
 
   const onFinishFailed = (errorInfo) => {
@@ -167,6 +169,7 @@ const Shipment = () => {
         onCancel={handleCancel}
         footer={false}
       >
+
         <Form
         name="basic"
         onFinish={onFinish}
@@ -178,9 +181,9 @@ const Shipment = () => {
                 name="truck"
                 rules={[{ required: true, message: 'Please input all mandatory fields' }]}
             >
-            <Select placeholder="Search truck here">
-                <option value="1">1</option>
-                <option value="2">2</option>
+            <Select mode="multiple" placeholder="Search truck here">
+                <Option value="1">1</Option>
+                <Option value="2">2</Option>
             </Select>
             </Form.Item>
             <Form.Item
@@ -188,10 +191,11 @@ const Shipment = () => {
                 name="driver"
                 rules={[{ required: true, message: 'Please input all mandatory fields' }]}
             >
-            <Select placeholder="Search driver here">
-                <option value="1">1</option>
-                <option value="2">2</option>
-            </Select>      </Form.Item>
+            <Select mode="multiple" placeholder="Search driver here">
+                <Option value="1">1</Option>
+                <Option value="2">2</Option>
+            </Select>      
+            </Form.Item>
       <Form.Item {...tailLayout}>
           <Button style={{margin: margin.medium}} type="primary" htmlType="submit">
             Submit
@@ -221,9 +225,9 @@ const Shipment = () => {
                 name="origin"
                 rules={[{ required: true, message: 'Please input all mandatory fields' }]}
             >
-            <Select placeholder="Search district here">
-                <option value="1">1</option>
-                <option value="2">2</option>
+            <Select mode="multiple" placeholder="Search district here">
+                <Option value="1">1</Option>
+                <Option value="2">2</Option>
             </Select>
             </Form.Item>
             <Form.Item
@@ -231,9 +235,9 @@ const Shipment = () => {
                 name="destination"
                 rules={[{ required: true, message: 'Please input all mandatory fields' }]}
             >
-            <Select placeholder="Search district here">
-                <option value="1">1</option>
-                <option value="2">2</option>
+            <Select mode="multiple" placeholder="Search district here">
+                <Option value="1">1</Option>
+                <Option value="2">2</Option>
             </Select>      
             </Form.Item>
             <Form.Item
