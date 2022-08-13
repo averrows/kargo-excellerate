@@ -19,9 +19,9 @@ async function addDriverHandler(request, response){
     let data = request.payload
     let rand_id  = Math.floor(Math.random() * 1000000)
     let stat = "active"
-    let values = [rand_id, data.name, data.phonenumber, data.createdat, stat]
+    let values = [rand_id, data.name, data.phone_number, data.created_at, stat]
 
-    mysql.connection.query("insert into drivers (id, name, phonenumber, createdat, status) values ?", [values],(err, results, fields) => {
+    mysql.connection.query("insert into drivers (id, name, phone_number, created_at, status) values ?", [values],(err, results, fields) => {
         if (err===null){
             response.status(200).json(
                 {
@@ -40,7 +40,7 @@ async function addDriverHandler(request, response){
 
 async function updateDriverHandler(request, response){
     let data = request.payload
-    mysql.connection.query(`update drivers set name = ${data.name}, phonenumber ${data.phonenumber}, createdat = ${data.createdat}, status = ${data.status}`,
+    mysql.connection.query(`update drivers set name = ${data.name}, phone_number = ${data.phone_number}, created_at = ${data.created_at}, status = ${data.status}`,
         (err, results, fields) => {
         if (err===null){
             response.status(200).json(
