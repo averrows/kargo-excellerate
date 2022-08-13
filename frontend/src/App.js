@@ -5,6 +5,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Login from "./pages/login";
 import store from "./reducer";
 import Driver from "./pages/driver";
+import Truck from "./pages/truck";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
           <Routes>
             <Route path="/login" element={<Login />}></Route>
             <Route path="/driver" element={<Driver />}></Route>
+            <Route path="/truck" element={<Truck />}></Route>
             {/* YOUR CODE HERE */}
 
             <Route exact path="/" element={<Navigate to="/login" />} />
