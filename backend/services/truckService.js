@@ -2,14 +2,25 @@ const mysql = require("../utils/mysql");
 const express = require("express");
 const {request, response} = require("express");
 const {toSQLString} = require("../utils/sqlUtil")
+const {PAGE_SIZE} = require("../constants/paging");
 const router = express.Router();
 
 
 async function listHandler(request, response) {
+    let pageNum = 1;
+    if (request.params["page_number"] !== null || request.params["page_number"] === 0){
+        pageNum = 1;
+    } else {
+        pageNum = request.params["page_number"];
+    }
     mysql.connection.query("select * from trucks", (err, results, fields) => {
+        results.slice((pageNum - 1)*PAGE_SIZE, pageNum*PAGE_SIZE)
         response.status(200).json(
             {
                 data: results,
+                page_number:pageNum,
+                page_size: PAGE_SIZE,
+                data_length:results.length,
                 message: "success"
             }
         )
