@@ -29,8 +29,11 @@ export default {
         add: async (data) => {
             return backend.post("/shipments", data)
         },
-        get: async (license) => {
-            return backend.get(`/shipments/${license}`);
+        get: async (ship_num) => {
+            return backend.get(`/shipments/${ship_num}`);
+        },
+        allocate: async (ship_num,data) => {
+            return backend.post(`/shipments/${ship_num}/allocate`,data)
         }
-    }
+    },
 }
