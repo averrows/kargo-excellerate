@@ -6,7 +6,7 @@ export const TruckTableColumns = (onClickUpdate) => {
   const columns = [
     {
       title: 'License Number',
-      dataIndex: 'license',
+      dataIndex: 'license_number',
       key: 'license',
       sorter: (a, b) => a.license.localeCompare(b.license),
       sortOrder: sortedInfo.columnKey === 'license' ? sortedInfo.order : null,
@@ -14,7 +14,7 @@ export const TruckTableColumns = (onClickUpdate) => {
     },
     {
       title: 'Truck Type',
-      dataIndex: 'truckType',
+      dataIndex: 'truck_type',
       key: 'truckType',
       sorter: (a, b) => a.truckType.localeCompare(b.truckType),
       sortOrder: sortedInfo.columnKey === 'truckType' ? sortedInfo.order : null,
@@ -22,7 +22,7 @@ export const TruckTableColumns = (onClickUpdate) => {
     },
     {
       title: 'Plate Type',
-      dataIndex: 'plateType',
+      dataIndex: 'plate_type',
       key: 'plateType',
       sorter: (a, b) => a.plateType.localeCompare(b.plateType),
       sortOrder: sortedInfo.columnKey === 'plateType' ? sortedInfo.order : null,
@@ -30,7 +30,7 @@ export const TruckTableColumns = (onClickUpdate) => {
     },
     {
       title: 'Production Year',
-      dataIndex: 'productionYear',
+      dataIndex: 'production_year',
       key: 'productionYear',
       sorter: (a, b) => a.productionYear - b.productionYear,
       sortOrder: sortedInfo.columnKey === 'productionYear' ? sortedInfo.order : null,

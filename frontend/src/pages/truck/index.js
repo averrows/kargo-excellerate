@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Select, Table, Input, Form, Upload, Modal, Space, Button } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import "./style.scss";
@@ -6,6 +6,7 @@ import { trucks } from "./mockData";
 import Navbar from '../../components/Navbar/Navbar';
 import { margin, width } from '../../constant';
 import { TruckTableColumns } from "./tableColumns";
+import Api from "../../service/Api";
 const {Option} = Select;
 const {Search} = Input;
 
@@ -22,7 +23,13 @@ function Truck() {
   const [inputTruckType, setInputTruckType] = useState("");
   const [inputProductionYear, setInputProductionYinputProductionYear] = useState("");
   const [truckId, setTruckId] = useState(null);
-  
+  const[trucksData, setTrucksData] = useState([]);
+
+  useEffect(() => {
+    Api.trucks.list().then((resp) => {
+        setTrucksData(resp.data.data)
+    })
+  }, [])
   const onFinish = (values) => {
     console.log("Success:", values);
     setTruckId(null);
@@ -138,11 +145,11 @@ function Truck() {
   );
 
   const onClickUpdate = (truck) => {
-    setTruckId(truck.license)
-    setInputLicenseNumber(truck.license)
-    setInputLicenseType(truck.plateType)
-    setInputTruckType(truck.truckType)
-    setInputProductionYinputProductionYear(truck.productionYear)
+    setTruckId(truck.license_number)
+    setInputLicenseNumber(truck.license_number)
+    setInputLicenseType(truck.plate_type)
+    setInputTruckType(truck.truck_type)
+    setInputProductionYinputProductionYear(truck.production_year)
     showModal();
   };
 
@@ -179,7 +186,7 @@ function Truck() {
           </div>
         </Space>
         <div>
-            <Table columns={TruckTableColumns(onClickUpdate)} dataSource={trucks} onChange={handleChange} />
+            <Table columns={TruckTableColumns(onClickUpdate)} dataSource={trucksData} onChange={handleChange} />
         </div>
       </div>
     </div>
