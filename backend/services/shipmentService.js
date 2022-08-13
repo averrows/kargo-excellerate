@@ -1,7 +1,7 @@
 const express = require("express");
 const {toSQLString} = require("../utils/sqlUtil");
 const mysql = require("../utils/mysql");
-const {basicCreateHandler, basicUpdateHandler} = require("./basicService");
+const {basicCreateHandler, basicUpdateHandler, basicGetOneHandler} = require("./basicService");
 const {PAGE_SIZE} = require("../constants/paging");
 const router = express.Router();
 
@@ -11,6 +11,10 @@ async function createHandler(req, res){
 
 async function updateHandler(req, res){
     await basicUpdateHandler(req, res, "shipments", "shipmentNumber", "shipment_number")
+}
+
+async function detailHandler(req, res){
+    await basicGetOneHandler(req, res, "shipments", "shipmentNumber", "shipment_number")
 }
 
 async function listHandler(request, response){
@@ -35,6 +39,7 @@ async function listHandler(request, response){
 }
 
 router.get("/", listHandler);
+router.get("/:shipmentNumber", detailHandler);
 router.post("/", createHandler);
 router.post("/:shipmentNumber", updateHandler)
 

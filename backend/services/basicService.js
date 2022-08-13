@@ -35,6 +35,17 @@ async function basicUpdateHandler(req, res, tableName, pkParam, pk) {
 
 }
 
+async function basicGetOneHandler(req, res, tableName, pkParam, pk){
+    mysql.connection.query(`select * from ${tableName} t where ${pk} = \"${req.params[pkParam]}\"`, (err, result, fields) => {
+        res.status(200).json(
+            {
+                data: result,
+                message: "success"
+            }
+        )
+    })
+}
+
 async function basicCreateHandler(req, res, tableName) {
     let request = req;
     let fields = "("
@@ -70,5 +81,6 @@ async function basicCreateHandler(req, res, tableName) {
 
 module.exports = {
     basicCreateHandler,
-    basicUpdateHandler
+    basicUpdateHandler,
+    basicGetOneHandler
 }
