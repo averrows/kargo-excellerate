@@ -1,5 +1,5 @@
 import { Radio, Space, Table, Tag, Select, Button, Input, Modal, Form, DatePicker } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { data } from "./data";
 import { margin, width } from "../../constant";
 import moment from 'moment'
@@ -102,6 +102,16 @@ const Shipment = () => {
   const [titleModal, setTitleModal] = useState("");
 
   const [visibleModalAdd, setVisibleModalAdd] = useState(false);
+  const [visibleModalUpdate, setVisibleModalUpdate] = useState(false);
+
+  const [dataShipment, setDataShipment] = useState(null);
+
+  useEffect(() => {
+    Api.shipments.list().then((resp) => {
+        setDataShipment(resp.data.data)
+    })
+  }, [])
+
 
   const showModalAdd = () => {
     setVisibleModalAdd(true);
