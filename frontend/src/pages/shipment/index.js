@@ -1,11 +1,21 @@
-import { Radio, Space, Table, Tag, Select, Button, Input, Modal, Form, DatePicker } from "antd";
+import {
+  Radio,
+  Space,
+  Table,
+  Tag,
+  Select,
+  Button,
+  Input,
+  Modal,
+  Form,
+  DatePicker,
+} from "antd";
 import React, { useState } from "react";
 import { data } from "./data";
 import { margin, width } from "../../constant";
-import moment from 'moment'
+import moment from "moment";
 
 const { Option } = Select;
- 
 
 const columns = (clickModal, shipment) => [
   {
@@ -59,16 +69,17 @@ const columns = (clickModal, shipment) => [
         <Select
           style={{ width: "180px", textAlign: "center" }}
           placeholder="Action"
-          onChange={(event)=>{
-            (event == "allocate") ? clickModal(`Allocate Shipment ${data.shipment}`, data) : clickModal(`Update Status ${data.shipment}`,data)
-          }
-          }
+          onChange={(event) => {
+            event == "allocate"
+              ? clickModal(`Allocate Shipment ${data.shipment}`, data, event)
+              : clickModal(`Update Status ${data.shipment}`, data, event);
+          }}
         >
           <Option value="allocate" style={{ textAlign: "center" }}>
             Allocate Shipment
           </Option>
           <Option value="status" style={{ textAlign: "center" }}>
-              Update Status
+            Update Status
           </Option>
         </Select>
         {/* <Button style={{width: "150px"}} type="dash" onClick={() => clickModal("Allocate Shipment")}>Allocate Shipment</Button>
@@ -79,53 +90,52 @@ const columns = (clickModal, shipment) => [
 ];
 
 const tailLayout = {
-    wrapperCol: {
-      offset: 8,
-      span: 16,
-    },
-  };
+  wrapperCol: {
+    offset: 8,
+    span: 16,
+  },
+};
 
-  const options = [
-    {name: 'Swedish', value: 'sv'},
-    {name: 'English', value: 'en'},
-    {
-        type: 'group',
-        name: 'Group name',
-        items: [
-            {name: 'Spanish', value: 'es'},
-        ]
-    },
+const options = [
+  { name: "Swedish", value: "sv" },
+  { name: "English", value: "en" },
+  {
+    type: "group",
+    name: "Group name",
+    items: [{ name: "Spanish", value: "es" }],
+  },
 ];
-
 
 const Shipment = () => {
   const [loading, setLoading] = useState(false);
   const [visible, setVisible] = useState(false);
-  const [titleModal, setTitleModal] = useState('');
+  const [titleModal, setTitleModal] = useState("");
 
   const [visibleModalAdd, setVisibleModalAdd] = useState(false);
+  const [visibleModalUpdate, setVisibleModalUpdate] = useState(false);
 
   const showModalAdd = () => {
     setVisibleModalAdd(true);
-  }
+  };
 
   const handleCancelAdd = () => {
     setVisibleModalAdd(false);
-  }
+  };
 
   const handleSubmitAdd = () => {
-    setVisibleModalAdd(false)
-  }
+    setVisibleModalAdd(false);
+  };
 
-  const showModal = (titleModal, shipment) => {
-    setVisible(true);
+  const showModal = (titleModal, shipment, event) => {
+    event === "allocate" ? setVisible(true) : setVisibleModalUpdate(true);
+
     setTitleModal(titleModal);
     console.log(shipment);
   };
 
   const handleOk = () => {
-      setLoading(false);
-      setVisible(false);
+    setLoading(false);
+    setVisible(false);
   };
 
   const handleCancel = () => {
@@ -133,19 +143,68 @@ const Shipment = () => {
   };
 
   const onFinish = (values) => {
-    console.log('Success:', values);
-    console.log(moment(values.loadingDate).format("DD/MM/YYYY"))
+    console.log("Success:", values);
+    console.log(moment(values.loadingDate).format("DD/MM/YYYY"));
   };
 
   const onFinishFailed = (errorInfo) => {
-    console.log('Failed:', errorInfo);
+    console.log("Failed:", errorInfo);
   };
 
+  const handleCancelUpdate = () => {
+    setVisibleModalUpdate(false);
+  };
+  const UpdateStatusModal = () => (
+    <Modal
+      visible={visibleModalUpdate}
+      title="Update Status Modal"
+      onCancel={handleCancelUpdate}
+      footer={false}
+    >
+      <Form
+        name="basic"
+        onFinish={onFinish}
+        onFinishFailed={onFinishFailed}
+        autoComplete="off"
+      >
+        <Form.Item
+          label="Status"
+          name="status"
+          rules={[
+            { required: true, message: "Please input all mandatory fields" },
+          ]}
+        >
+          <Select placeholder="Select Status">
+            <option value="1">1</option>
+            <option value="2">2</option>
+          </Select>
+        </Form.Item>
+        <Form.Item {...tailLayout}>
+          <Button
+            style={{ margin: margin.medium }}
+            type="primary"
+            htmlType="submit"
+          >
+            Update
+          </Button>
+          <Button
+            style={{ margin: margin.medium }}
+            htmlType="button"
+            onClick={handleCancelAdd}
+          >
+            Cancel
+          </Button>
+        </Form.Item>
+      </Form>
+    </Modal>
+  );
   return (
     <div>
       <div style={{ display: "flex", justifyContent: "end" }}>
         <div style={{ margin: margin.medium }}>
-          <Button onClick={showModalAdd} type="primary">Add Shipment</Button>
+          <Button onClick={showModalAdd} type="primary">
+            Add Shipment
+          </Button>
         </div>
         <div style={{ margin: margin.medium }}>
           <Input.Group compact>
@@ -162,102 +221,143 @@ const Shipment = () => {
         dataSource={data}
       />
       <>
-      <Modal
-        visible={visible}
-        title={titleModal}
-        onOk={handleOk}
-        onCancel={handleCancel}
-        footer={false}
-      >
-
-        <Form
-        name="basic"
-        onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
-        autoComplete="off"
+        <Modal
+          visible={visible}
+          title={titleModal}
+          onOk={handleOk}
+          onCancel={handleCancel}
+          footer={false}
         >
+          <Form
+            name="basic"
+            onFinish={onFinish}
+            onFinishFailed={onFinishFailed}
+            autoComplete="off"
+          >
             <Form.Item
-                label="Truck"
-                name="truck"
-                rules={[{ required: true, message: 'Please input all mandatory fields' }]}
+              label="Truck"
+              name="truck"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input all mandatory fields",
+                },
+              ]}
             >
-            <Select mode="multiple" placeholder="Search truck here">
+              <Select mode="multiple" placeholder="Search truck here">
                 <Option value="1">1</Option>
                 <Option value="2">2</Option>
-            </Select>
+              </Select>
             </Form.Item>
             <Form.Item
-                label="Driver"
-                name="driver"
-                rules={[{ required: true, message: 'Please input all mandatory fields' }]}
+              label="Driver"
+              name="driver"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input all mandatory fields",
+                },
+              ]}
             >
-            <Select mode="multiple" placeholder="Search driver here">
+              <Select mode="multiple" placeholder="Search driver here">
                 <Option value="1">1</Option>
                 <Option value="2">2</Option>
-            </Select>      
+              </Select>
             </Form.Item>
-      <Form.Item {...tailLayout}>
-          <Button style={{margin: margin.medium}} type="primary" htmlType="submit">
-            Submit
-          </Button>
-          <Button style={{margin: margin.medium}} htmlType="button" onClick={handleCancel}>
-            Cancel
-          </Button>
-        </Form.Item>
-      </Form>
-      </Modal>
+            <Form.Item {...tailLayout}>
+              <Button
+                style={{ margin: margin.medium }}
+                type="primary"
+                htmlType="submit"
+              >
+                Submit
+              </Button>
+              <Button
+                style={{ margin: margin.medium }}
+                htmlType="button"
+                onClick={handleCancel}
+              >
+                Cancel
+              </Button>
+            </Form.Item>
+          </Form>
+        </Modal>
 
-      <Modal
-        visible={visibleModalAdd}
-        title="Add Shipment"
-        onOk={handleSubmitAdd}
-        onCancel={handleCancelAdd}
-        footer={false}
-      >
-        <Form
-        name="basic"
-        onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
-        autoComplete="off"
+        <Modal
+          visible={visibleModalAdd}
+          title="Add Shipment"
+          onOk={handleSubmitAdd}
+          onCancel={handleCancelAdd}
+          footer={false}
         >
+          <Form
+            name="basic"
+            onFinish={onFinish}
+            onFinishFailed={onFinishFailed}
+            autoComplete="off"
+          >
             <Form.Item
-                label="Origin"
-                name="origin"
-                rules={[{ required: true, message: 'Please input all mandatory fields' }]}
+              label="Origin"
+              name="origin"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input all mandatory fields",
+                },
+              ]}
             >
-            <Select mode="multiple" placeholder="Search district here">
+              <Select mode="multiple" placeholder="Search district here">
                 <Option value="1">1</Option>
                 <Option value="2">2</Option>
-            </Select>
+              </Select>
             </Form.Item>
             <Form.Item
-                label="Destination"
-                name="destination"
-                rules={[{ required: true, message: 'Please input all mandatory fields' }]}
+              label="Destination"
+              name="destination"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input all mandatory fields",
+                },
+              ]}
             >
-            <Select mode="multiple" placeholder="Search district here">
+              <Select mode="multiple" placeholder="Search district here">
                 <Option value="1">1</Option>
                 <Option value="2">2</Option>
-            </Select>      
+              </Select>
             </Form.Item>
             <Form.Item
-                label="Loading Date"
-                name="loadingDate"
-                rules={[{ required: true, message: 'Please input all mandatory fields' }]}
+              label="Loading Date"
+              name="loadingDate"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input all mandatory fields",
+                },
+              ]}
             >
-            <DatePicker /> 
+              <DatePicker />
             </Form.Item>
-      <Form.Item {...tailLayout}>
-          <Button style={{margin: margin.medium}} type="primary" htmlType="submit">
-            Submit
-          </Button>
-          <Button style={{margin: margin.medium}} htmlType="button" onClick={handleCancelAdd}>
-            Cancel
-          </Button>
-        </Form.Item>
-      </Form>
-      </Modal>
-    </>
+            <Form.Item {...tailLayout}>
+              <Button
+                style={{ margin: margin.medium }}
+                type="primary"
+                htmlType="submit"
+              >
+                Submit
+              </Button>
+              <Button
+                style={{ margin: margin.medium }}
+                htmlType="button"
+                onClick={handleCancelAdd}
+              >
+                Cancel
+              </Button>
+            </Form.Item>
+          </Form>
+        </Modal>
+        <UpdateStatusModal />
+      </>
     </div>
   );
 };
