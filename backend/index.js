@@ -21,8 +21,6 @@ app.use(express.urlencoded({extended: true}))
 app.use(express.json())
 
 
-
-
 app.use('/api/trucks', truckService);
 app.use('/api/docs', docService);
 app.use('/api/drivers', driverService);
