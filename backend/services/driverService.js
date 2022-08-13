@@ -21,11 +21,11 @@ async function addDriverHandler(request, response){
 }
 
 async function updateDriverHandler(request, response){
-    await basicUpdateHandler(request,response,"drivers","driverId", "driver_id")
+    await basicUpdateHandler(request,response,"drivers","name", "name")
 }
 
 async function detailHandler(request, response){
-    await basicGetOneHandler(request, response, "drivers", "driverId", "driver_id");
+    await basicGetOneHandler(request, response, "drivers", "name", "name");
 }
 
 
@@ -37,11 +37,11 @@ router.post("/", async (req, res) => {
     await addDriverHandler(req, res);
 })
 
-router.post("/:driverId", async (req, res) => {
+router.post("/:name", async (req, res) => {
     await updateDriverHandler(req, res);
 })
 
-router.get("/:driverId", detailHandler)
+router.get("/:name", detailHandler)
 
 module.exports = {
     driverService: router

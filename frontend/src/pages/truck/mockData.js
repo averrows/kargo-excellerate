@@ -10,6 +10,7 @@ export const trucks = [
     truckType: 'Tronton',
     plateType: 'Yellow',
     productionYear: 2001,
+    status: "active",
     action: <Button onClick={handleUpdate}>Update</Button>
   },
   {
@@ -18,6 +19,7 @@ export const trucks = [
     truckType: 'Container',
     plateType: 'Yellow',
     productionYear: 2002,
+    status: "inactive",
     action: <Button onClick={handleUpdate}>Update</Button>
   },
   {
@@ -26,6 +28,7 @@ export const trucks = [
     truckType: 'CDE',
     plateType: 'Black',
     productionYear: 2000,
+    status: "active",
     action: <Button onClick={handleUpdate}>Update</Button>
   },
 ];

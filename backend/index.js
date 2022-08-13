@@ -5,6 +5,7 @@ const mysql2 = require('mysql2');
 const mysql = require("./utils/mysql");
 const {docService} = require("./services/docService");
 const {shipmentService} = require("./services/shipmentService");
+const cors = require('cors')
 
 mysql.connection = mysql2.createConnection({
     host: 'localhost',
@@ -17,10 +18,10 @@ mysql.connection = mysql2.createConnection({
 
 const app = express()
 
+app.use(cors())
+
 app.use(express.urlencoded({extended: true}))
 app.use(express.json())
-
-
 
 
 app.use('/api/trucks', truckService);

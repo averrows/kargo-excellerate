@@ -1,10 +1,12 @@
 import { useState } from "react";
-import { Select, Table, Input, Modal, Space } from "antd";
+import { Select, Table, Input, Form, Upload, Modal, Space, Button } from "antd";
+import { UploadOutlined } from "@ant-design/icons";
 import "./style.scss";
 import { trucks } from "./mockData";
 import Navbar from '../../components/Navbar/Navbar';
-import Constant from '../../constant';
+import { margin, width } from '../../constant';
 import { TruckTableColumns } from "./tableColumns";
+const {Option} = Select;
 const {Search} = Input;
 
 function Truck() {
@@ -15,8 +17,19 @@ function Truck() {
     setFilteredInfo(filters);
     setSortedInfo(sorter);
   };
-
+  const [inputLicenseNumber, setInputLicenseNumber] = useState("");
+  const [inputLicenseType, setInputLicenseType] = useState("");
+  const [inputTruckType, setInputTruckType] = useState("");
+  const [inputProductionYear, setInputProductionYinputProductionYear] = useState("");
+  const [truckId, setTruckId] = useState(null);
   
+  const onFinish = (values) => {
+    console.log("Success:", values);
+    setTruckId(null);
+    setInputLicenseNumber("");
+    setInputLicenseType("yellow");
+    setInputTruckType("");
+  };
 
   const [isModalVisible, setIsModalVisible] = useState(false);
 
@@ -28,22 +41,109 @@ function Truck() {
     setIsModalVisible(false);
   };
 
-  const AddDriverModal = (
+  const deactiveTruck = () => {
+    console.log(truckId);
+    hideModal();
+  };
+
+  const AddTruckModal = () => (
     <Modal
-      title="Basic Modal"
+      title="Add or Update Truck"
       visible={isModalVisible}
-      onOk={hideModal}
+      footer={false}
       onCancel={hideModal}
     >
-      <p>Some contents...</p>
-      <p>Some contents...</p>
-      <p>Some contents...</p>
+      <Form onFinish={onFinish}>
+        {truckId !== null && (
+          <Button
+            onClick={() => deactiveTruck()}
+            danger
+            style={{ marginBottom: margin.medium }}
+          >
+            Deactive Driver
+          </Button>
+        )}
+        <Form.Item
+          initialValue={inputLicenseNumber}
+          label="License Number"
+          name="license"
+          rules={[
+            {
+              required: true,
+              message: "Please input your license number!",
+            },
+          ]}
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item
+          label="License Type"
+          name="plateType"
+          rules={[
+            {
+              required: true,
+            }
+          ]}>
+            <Select defaultValue={inputLicenseType}>
+              <Option value="yellow">Yellow</Option>
+              <Option value="black">Black</Option>
+            </Select>
+        </Form.Item>
+        <Form.Item
+          label="Truck Type"
+          name="truckType"
+          rules={[
+            {
+              required: true,
+            }
+          ]}>
+            <Select defaultValue={inputTruckType}>
+              <Option value="tronton">Tronton</Option>
+              <Option value="cde">CDE</Option>
+              <Option value="container">Container</Option>
+            </Select>
+        </Form.Item>
+        <Form.Item
+          initialValue={inputProductionYear}
+          label="Production Year"
+          name="productionYear"
+          rules={[
+            {
+              required: true,
+              message: "Please input your production year!",
+            },
+          ]}
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item label="STNK" name="stnk">
+          <Upload>
+            <Button icon={<UploadOutlined />}>Upload</Button>
+          </Upload>
+        </Form.Item>
+        <Form.Item label="KIR" name="kir">
+          <Upload>
+            <Button icon={<UploadOutlined />}>Upload</Button>
+          </Upload>
+        </Form.Item>
+        <Form.Item>
+          <div className="driver-search_container">
+            <Button type="primary" htmlType="submit">
+              Submit
+            </Button>
+          </div>
+        </Form.Item>
+      </Form>
     </Modal>
   );
 
-  const onClickUpdate = (id) => {
+  const onClickUpdate = (truck) => {
+    setTruckId(truck.license)
+    setInputLicenseNumber(truck.license)
+    setInputLicenseType(truck.plateType)
+    setInputTruckType(truck.truckType)
+    setInputProductionYinputProductionYear(truck.productionYear)
     showModal();
-    console.log(id);
   };
 
   const uniqueTrucksType = [];
@@ -54,26 +154,34 @@ function Truck() {
 
   return (
     <div className="truck">
-        <div className="truck-header">
-            <Navbar shipper={true} />
-            <Space style={{ width: "100%" }}>
-              <Select 
-                  className="truck-typeFilter"
-                  placeholder="Truck Type"
-                  mode="multiple" 
-                  options={uniqueTrucksType}>
-              </Select>
-              <Search
-                className="truck-search"
-                placeholder="input search text"
-                allowClear
-                enterButton="Search"
-                style={{ width: "200px" }}/>
-            </Space>
-            <div>
-                <Table columns={TruckTableColumns(onClickUpdate)} dataSource={trucks} onChange={handleChange} />
-            </div>
+      <div className="truck-header">
+        <Navbar shipper={true} />
+        <Space style={{ width: "100%", marginBottom: margin.medium }}>
+          <Select 
+              className="truck-typeFilter"
+              placeholder="Truck Type"
+              mode="multiple" 
+              options={uniqueTrucksType}>
+          </Select>
+          <AddTruckModal />
+          <div className="truck-search_container">
+            <Button
+              type="primary"
+              onClick={() => showModal()}
+              style={{ marginRight: margin.medium }}
+            >
+              Add Truck
+            </Button>
+            <Search
+              placeholder="input search text"
+              allowClear
+              style={{ width: width.search }}/>
+          </div>
+        </Space>
+        <div>
+            <Table columns={TruckTableColumns(onClickUpdate)} dataSource={trucks} onChange={handleChange} />
         </div>
+      </div>
     </div>
   );
 }
