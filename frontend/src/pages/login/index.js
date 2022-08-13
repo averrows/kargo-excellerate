@@ -1,11 +1,6 @@
-import { useCallback } from "react";
-import { Button, Select, Space, Typography } from "antd";
+import { useCallback, useState } from "react";
+import { Button, Radio, Space } from "antd";
 import "./style.scss";
-
-const options = [
-  { label: "Transporter", value: "transporter" },
-  { label: "Shipper", value: "shipper" },
-];
 
 // This is mostly cover what ticket #1 is all about
 function Login() {
@@ -14,17 +9,31 @@ function Login() {
       /* YOUR CODE HERE */
     }
   });
+
+  const [setValue] = useState(1);
+
+  const onChange = (e) => {
+    setValue(e.target.value);
+  };
+  
   return (
     <div className="login">
       <div className="login-header">
         <div className="login-header-wrapper">
           <Space direction="vertical">
-            <Typography.Title code>Kargo TMS</Typography.Title>
+            <Space direction="horizontal" align="start" className="login-role">
+              <div className="login-role-text">
+                Role
+              </div>
+              <Radio.Group onChange={onChange}>
+                <Space direction="vertical">
+                  <Radio value={1}>Transporter</Radio>
+                  <Radio value={2}>Shipper</Radio>
+                </Space>
+              </Radio.Group>
+            </Space>
             <div>
-              Log in as <Select placeholder="User" options={options} />
-            </div>
-            <div>
-              <Button onClick={handleLogin} type="primary">
+              <Button onClick={handleLogin}>
                 Login
               </Button>
             </div>
