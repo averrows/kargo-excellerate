@@ -71,6 +71,28 @@ async function detailHandler(request, response) {
     })
 }
 
+async function updateHandler(request, response){
+    let query = "update trucks set "
+    for (let [key, value] of Object.entries(request.body)) {
+        query += `${key}  = ${toSQLString(value)},`
+    }
+    query = query.slice(0,-1);
+    query += ` where license_number = ${toSQLString(request.params["licenseNumber"])}`
+    console.log(query)
+    mysql.connection.query(query, (err) => {
+        if (err === null){
+            response.status(200).json({
+                message:"success"
+            })
+        } else {
+            console.log(err.message)
+            response.status(500).json({
+                message:"failed"
+            })
+        }
+    })
+}
+
 
 router.get("/", async (request, response) => {
     await listHandler(request, response);
@@ -85,7 +107,7 @@ router.post("/", async (req, res) => {
 })
 
 router.post("/:licenseNumber", async (req, res) => {
-
+    await updateHandler(req, res);
 })
 
 
