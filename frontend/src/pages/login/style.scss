@@ -1,9 +1,15 @@
 .login {
-  background-color: #282c34;
-
+  &-role {
+    text-align: left;
+    margin-bottom: 10px;
+    
+    &-text {
+      margin-right: 10px;
+    }
+  }
   &-header {
     align-items: center;
-    color: white;
+    color: black;
     display: flex;
     flex-direction: column;
     justify-content: center;

@@ -1,10 +1,7 @@
-const mysql = require('mysql');
+const mysql = require('mysql2');
 
-const connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'mysql009A',
-    database: 'kargo_excellerate'
-});
+var connection;
 
-export default connection;
+module.exports = {
+    connection
+}
