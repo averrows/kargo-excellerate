@@ -1,8 +1,9 @@
 const express = require('express');
 const {truckService} = require("./services/truckService");
-const app = express()
+const driverService = require("./services/driverService")
 const mysql2 = require('mysql2');
-const mysql = require("./utils/mysql")
+const mysql = require("./utils/mysql");
+const {docService} = require("./services/docService");
 
 mysql.connection = mysql2.createConnection({
     host: 'localhost',
@@ -12,7 +13,18 @@ mysql.connection = mysql2.createConnection({
     database: 'kargo_excellerate'
 });
 
+
+const app = express()
+
+app.use(express.urlencoded({extended: true}))
+app.use(express.json())
+
+
+
+
 app.use('/api/trucks', truckService);
+app.use('/api/docs', docService);
+app.use('/api/drivers', docService)
 
 app.get('/test', (req,res) => {
     res.json({
