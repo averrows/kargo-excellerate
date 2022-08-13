@@ -1,6 +1,7 @@
 const mysql = require("../utils/mysql");
 const express = require("express");
 const {request, response} = require("express");
+const {toSQLString} = require("../utils/sqlUtil")
 const router = express.Router();
 
 
@@ -17,19 +18,27 @@ async function listHandler(request, response) {
 
 async function createHandler(request, response) {
     let insertedData = request.body;
-    mysql.connection.query("insert into trucks" +
-        "(license_number,truck_type,plate_type,production_year,status)" +
+    console.log("insert into trucks" +
+        "(license_number,truck_type,plate_type,production_year,`status`)" +
         "values" +
         `(${toSQLString(insertedData["license_number"])},
         ${toSQLString(insertedData["truck_type"])},
         ${toSQLString(insertedData["plate_type"])}
-        ,${insertedData["production_year"]}),${toSQLString(insertedData["status"])}`,
+        ,${insertedData["production_year"]}),${insertedData["status"]}`)
+    mysql.connection.query("insert into trucks" +
+        "(license_number,truck_type,plate_type,production_year,`status`)" +
+        "values" +
+        `(${toSQLString(insertedData["license_number"])},
+        ${toSQLString(insertedData["truck_type"])},
+        ${toSQLString(insertedData["plate_type"])}
+        ,${insertedData["production_year"]},${toSQLString(insertedData["status"])})`,
         (err, sqlRes) => {
         if (err === null){
             response.status(200).json({
                 message:"success"
             })
         } else {
+            console.log(err.message)
             response.status(500).json({
                 message:"failed"
             })

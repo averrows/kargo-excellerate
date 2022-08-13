@@ -1,8 +1,7 @@
 const express = require('express');
 const {truckService} = require("./services/truckService");
-const app = express()
 const mysql2 = require('mysql2');
-const mysql = require("./utils/mysql")
+const mysql = require("./utils/mysql");
 
 mysql.connection = mysql2.createConnection({
     host: 'localhost',
@@ -11,6 +10,15 @@ mysql.connection = mysql2.createConnection({
     password: 'mysql009A',
     database: 'kargo_excellerate'
 });
+
+
+const app = express()
+
+app.use(express.urlencoded({extended: true}))
+app.use(express.json())
+
+
+
 
 app.use('/api/trucks', truckService);
 
