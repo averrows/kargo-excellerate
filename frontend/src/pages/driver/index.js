@@ -10,23 +10,30 @@ import {
   notification,
 } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
-import { drivers } from "./mockData";
 import "./style.scss";
 import { DriverTableColumns } from "./tableColumns";
 import { margin, width } from "../../constant";
+import { useEffect } from "react";
+import Api from "../../service/Api";
 const { Search } = Input;
 
 export default function Driver() {
+  const [driversData, setDriversData] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [inputName, setInputName] = useState("");
   const [inputPhoneNumber, setInputPhoneNumber] = useState("");
   const [driverId, setDriverId] = useState(null);
+
+  useEffect(() => {
+    Api.drivers.list().then((resp) => setDriversData(resp.data.data));
+  }, []);
 
   const onFinish = (values) => {
     console.log("Success:", values);
     setDriverId(null);
     setInputName("");
     setInputPhoneNumber("");
+    Api.drivers.add(values);
   };
 
   const showModal = () => {
@@ -41,7 +48,6 @@ export default function Driver() {
   };
 
   const deactiveDriver = () => {
-    console.log(driverId);
     hideModal();
     notification["success"]({
       message: "Success",
@@ -139,7 +145,10 @@ export default function Driver() {
           style={{ width: width.search, marginBottom: margin.medium }}
         />
       </div>
-      <Table columns={DriverTableColumns(onClickUpdate)} dataSource={drivers} />
+      <Table
+        columns={DriverTableColumns(onClickUpdate)}
+        dataSource={driversData}
+      />
     </div>
   );
 }
