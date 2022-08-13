@@ -14,6 +14,12 @@ mysql.connection = mysql2.createConnection({
 
 app.use('/api/trucks', truckService);
 
+app.get('/test', (req,res) => {
+    res.json({
+        status:"fine"
+    })
+})
+
 app.listen(8000, async () => {
     console.log("server started on http://localhost:8000");
 })
