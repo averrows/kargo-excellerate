@@ -1,8 +1,10 @@
 import { Radio, Space, Table, Tag, Select, Button, Input, Modal, Form, DatePicker } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { data } from "./data";
 import { margin, width } from "../../constant";
 import moment from 'moment'
+import Api from '../../service/Api';
+import axios from "axios";
 
 const { Option } = Select;
  
@@ -10,8 +12,8 @@ const { Option } = Select;
 const columns = (clickModal, shipment) => [
   {
     title: "Shipment",
-    dataIndex: "shipment",
-    key: "shipment",
+    dataIndex: "shipment_number",
+    key: "shipment_number",
     sorter: (a, b) => a.shipment.localeCompare(b.shipment),
     // sorter:
   },
@@ -23,8 +25,8 @@ const columns = (clickModal, shipment) => [
   },
   {
     title: "Driver's Name",
-    dataIndex: "driversName",
-    key: "driversName",
+    dataIndex: "driver_name",
+    key: "driver_name",
     sorter: (a, b) => a.driversName.localeCompare(b.driversName),
   },
   {
@@ -41,8 +43,8 @@ const columns = (clickModal, shipment) => [
   },
   {
     title: "Loading Date",
-    dataIndex: "loadingDate",
-    key: "loadingDate",
+    dataIndex: "loading_date",
+    key: "loading_date",
     sorter: (a, b) => a.loadingDate.localeCompare(b.loadingDate),
   },
   {
@@ -60,7 +62,7 @@ const columns = (clickModal, shipment) => [
           style={{ width: "180px", textAlign: "center" }}
           placeholder="Action"
           onChange={(event)=>{
-            (event == "allocate") ? clickModal(`Allocate Shipment ${data.shipment}`, data) : clickModal(`Update Status ${data.shipment}`,data)
+            (event == "allocate") ? clickModal(`Allocate Shipment ${data.shipment_number}`, data) : clickModal(`Update Status ${data.shipment_number}`,data)
           }
           }
         >
@@ -104,6 +106,29 @@ const Shipment = () => {
   const [titleModal, setTitleModal] = useState('');
 
   const [visibleModalAdd, setVisibleModalAdd] = useState(false);
+
+  const [dataShipment, setDataShipment] = useState(null);
+  const [dataTruck, setDataTruck] = useState(null);
+  const [dataDriver, setDataDriver] = useState(null);
+
+  
+  useEffect(() => {
+    Api.shipments.list().then((resp) => {
+        console.log(resp.data.data)
+        setDataShipment(resp.data.data)
+    })
+
+    Api.trucks.list().then((resp) => {
+        console.log(resp.data.data)
+        setDataTruck(resp.data.data)
+    })
+
+    Api.drivers.list().then((resp) => {
+        console.log(resp.data.data)
+        setDataDriver(resp.data.data)
+    })
+  }, [])
+
 
   const showModalAdd = () => {
     setVisibleModalAdd(true);
@@ -154,12 +179,13 @@ const Shipment = () => {
           </Input.Group>
         </div>
       </div>
+      
       <Table
         columns={columns(showModal)}
         pagination={{
           position: ["bottomCenter"],
         }}
-        dataSource={data}
+        dataSource={dataShipment}
       />
       <>
       <Modal
