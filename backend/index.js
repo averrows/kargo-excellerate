@@ -1,5 +1,6 @@
 const express = require('express');
 const {truckService} = require("./services/truckService");
+const driverService = require("./services/driverService")
 const mysql2 = require('mysql2');
 const mysql = require("./utils/mysql");
 
@@ -21,6 +22,7 @@ app.use(express.json())
 
 
 app.use('/api/trucks', truckService);
+app.use('/api/drivers', driverService);
 
 app.get('/test', (req,res) => {
     res.json({
