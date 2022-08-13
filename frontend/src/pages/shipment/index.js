@@ -1,18 +1,17 @@
-import { Radio, Space, Table, Tag, Select, Button, Input } from "antd";
+import { Radio, Space, Table, Tag, Select, Button, Input, Modal, Form, DatePicker } from "antd";
 import React, { useState } from "react";
+import { data } from "./data";
+import { margin, width } from "../../constant";
 
-const actions = [
-  { label: "Allocate Shipment", value: "allocate" },
-  { label: "Update Status", value: "status" },
-];
+const { Option } = Select;
 
-const columns = [
+const columns = (clickModal) => [
   {
     title: "Shipment",
     dataIndex: "shipment",
     key: "shipment",
     sorter: (a, b) => a.shipment.localeCompare(b.shipment),
-    // sorter: 
+    // sorter:
   },
   {
     title: "License",
@@ -37,7 +36,6 @@ const columns = [
     dataIndex: "destination",
     key: "destination",
     sorter: (a, b) => a.destination.localeCompare(b.destination),
-
   },
   {
     title: "Loading Date",
@@ -54,96 +52,208 @@ const columns = [
   {
     title: "Action",
     key: "action",
-    render: (_) => (
+    render: (data) => (
       <Space size="middle">
         <Select
-          style={{ width: "150px", textAlign: "center" }}
+          style={{ width: "180px", textAlign: "center" }}
           placeholder="Action"
-          options={actions}
-        />
+          onChange={(event)=>{
+            (event == "allocate") ? clickModal(`Allocate Shipment ${data.shipment}`, data) : clickModal(`Update Status ${data.shipment}`,data)
+          }
+          }
+        >
+          <Option value="allocate" style={{ textAlign: "center" }}>
+            Allocate Shipment
+          </Option>
+          <Option value="status" style={{ textAlign: "center" }}>
+              Update Status
+          </Option>
+        </Select>
+        {/* <Button style={{width: "150px"}} type="dash" onClick={() => clickModal("Allocate Shipment")}>Allocate Shipment</Button>
+        <Button type="primary" onClick={() => clickModal("Update Status")}>Update Status</Button> */}
       </Space>
     ),
   },
 ];
-const data = [
-  {
-    key: "1",
-    shipment: "DO-1",
-    license: "B 32 UT",
-    driversName: "Budi",
-    origin: "Jakarta",
-    destination: "Surabaya",
-    loadingDate: "21 Agustus",
-    status: "Ongoing",
-  },
-  {
-    key: "2",
-    shipment: "DO-2",
-    license: "B 322 UT",
-    driversName: "Cudi",
-    origin: "Jakarta",
-    destination: "Surabaya",
-    loadingDate: "21 Agustus",
-    status: "Ongoing",
-  },
-  {
-    key: "3",
-    shipment: "DO-3",
-    license: "B 323 UT",
-    driversName: "Cudi",
-    origin: "Jakarta",
-    destination: "Surabaya",
-    loadingDate: "21 Agustus",
-    status: "Ongoing",
-  },
-  {
-    key: "4",
-    shipment: "DO-4",
-    license: "B 324 UT",
-    driversName: "dudi",
-    origin: "Jakarta",
-    destination: "Surabaya",
-    loadingDate: "21 Agustus",
-    status: "Ongoing",
-  },
-  {
-    key: "5",
-    shipment: "DO-4",
-    license: "B 324 UT",
-    driversName: "adi",
-    origin: "Jakarta",
-    destination: "Surabaya",
-    loadingDate: "21 Agustus",
-    status: "Ongoing",
-  },
+
+const tailLayout = {
+    wrapperCol: {
+      offset: 8,
+      span: 16,
+    },
+  };
+
+  const options = [
+    {name: 'Swedish', value: 'sv'},
+    {name: 'English', value: 'en'},
+    {
+        type: 'group',
+        name: 'Group name',
+        items: [
+            {name: 'Spanish', value: 'es'},
+        ]
+    },
 ];
 
+
 const Shipment = () => {
+  const [loading, setLoading] = useState(false);
+  const [visible, setVisible] = useState(false);
+  const [titleModal, setTitleModal] = useState('');
+
+  const [visibleModalAdd, setVisibleModalAdd] = useState(false);
+
+
+  const showModalAdd = () => {
+    setVisibleModalAdd(true);
+  }
+
+  const handleCancelAdd = () => {
+    setVisibleModalAdd(false);
+  }
+
+  const handleSubmitAdd = () => {
+    setVisibleModalAdd(false)
+  }
+
+  const showModal = (titleModal, shipment) => {
+    setVisible(true);
+    setTitleModal(titleModal);
+    console.log(shipment);
+  };
+
+  const handleOk = () => {
+      setLoading(false);
+      setVisible(false);
+  };
+
+  const handleCancel = () => {
+    setVisible(false);
+  };
+
+  const onFinish = (values) => {
+    console.log('Success:', values);
+  };
+
+  const onFinishFailed = (errorInfo) => {
+    console.log('Failed:', errorInfo);
+  };
+
   return (
     <div>
-      <div style={{display: "flex", justifyContent: "end", }}>
-        <div style={{margin: "1rem 20px"}}>
-        <Button type="primary">Add Shipment</Button>
-
+      <div style={{ display: "flex", justifyContent: "end" }}>
+        <div style={{ margin: margin.medium }}>
+          <Button onClick={showModalAdd} type="primary">Add Shipment</Button>
         </div>
-        <div style={{margin: "1rem 20px"}}>
-        <Input.Group compact >
-          <Input
-          placeholder="Search"
-            style={{ width: "200px"}}
-          />
-          <Button type="default">Go</Button>
-        </Input.Group>
+        <div style={{ margin: margin.medium }}>
+          <Input.Group compact>
+            <Input placeholder="Search" style={{ width: width.search }} />
+            <Button type="default">Go!</Button>
+          </Input.Group>
         </div>
-        
       </div>
       <Table
-        columns={columns}
+        columns={columns(showModal)}
         pagination={{
           position: ["bottomCenter"],
         }}
         dataSource={data}
       />
+      <>
+      <Modal
+        visible={visible}
+        title={titleModal}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        footer={false}
+      >
+        <Form
+        name="basic"
+        onFinish={onFinish}
+        onFinishFailed={onFinishFailed}
+        autoComplete="off"
+        >
+            <Form.Item
+                label="Truck"
+                name="truck"
+                rules={[{ required: true, message: 'Please input all mandatory fields' }]}
+            >
+            <Select placeholder="Search truck here">
+                <option value="1">1</option>
+                <option value="2">2</option>
+            </Select>
+            </Form.Item>
+            <Form.Item
+                label="Driver"
+                name="driver"
+                rules={[{ required: true, message: 'Please input all mandatory fields' }]}
+            >
+            <Select placeholder="Search driver here">
+                <option value="1">1</option>
+                <option value="2">2</option>
+            </Select>      </Form.Item>
+      <Form.Item {...tailLayout}>
+          <Button style={{margin: margin.medium}} type="primary" htmlType="submit">
+            Submit
+          </Button>
+          <Button style={{margin: margin.medium}} htmlType="button" onClick={handleCancel}>
+            Cancel
+          </Button>
+        </Form.Item>
+      </Form>
+      </Modal>
+
+      <Modal
+        visible={visibleModalAdd}
+        title="Add Shipment"
+        onOk={handleSubmitAdd}
+        onCancel={handleCancelAdd}
+        footer={false}
+      >
+        <Form
+        name="basic"
+        onFinish={onFinish}
+        onFinishFailed={onFinishFailed}
+        autoComplete="off"
+        >
+            <Form.Item
+                label="Origin"
+                name="origin"
+                rules={[{ required: true, message: 'Please input all mandatory fields' }]}
+            >
+            <Select placeholder="Search district here">
+                <option value="1">1</option>
+                <option value="2">2</option>
+            </Select>
+            </Form.Item>
+            <Form.Item
+                label="Destination"
+                name="destination"
+                rules={[{ required: true, message: 'Please input all mandatory fields' }]}
+            >
+            <Select placeholder="Search district here">
+                <option value="1">1</option>
+                <option value="2">2</option>
+            </Select>      
+            </Form.Item>
+            <Form.Item
+                label="Loading Date"
+                name="loadingDate"
+                rules={[{ required: true, message: 'Please input all mandatory fields' }]}
+            >
+            <DatePicker /> 
+            </Form.Item>
+      <Form.Item {...tailLayout}>
+          <Button style={{margin: margin.medium}} type="primary" htmlType="submit">
+            Submit
+          </Button>
+          <Button style={{margin: margin.medium}} htmlType="button" onClick={handleCancelAdd}>
+            Cancel
+          </Button>
+        </Form.Item>
+      </Form>
+      </Modal>
+    </>
     </div>
   );
 };
