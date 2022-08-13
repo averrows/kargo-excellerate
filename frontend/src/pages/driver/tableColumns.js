@@ -31,9 +31,9 @@ export const DriverTableColumns = (onClickUpdate) => {
     },
     {
       key: "action",
-      render: (name) => (
-        <Button type="primary" onClick={() => onClickUpdate(name)}>
-          update
+      render: (driver) => (
+        <Button type="primary" onClick={() => onClickUpdate(driver)}>
+          Update
         </Button>
       ),
     },
