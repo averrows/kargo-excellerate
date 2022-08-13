@@ -1,43 +1,39 @@
-import { Button, Table, Input } from "antd";
+import { useState } from "react";
+import { Table, Input, Modal } from "antd";
 import { drivers } from "./mockData";
 import "./style.scss";
+import { DriverTableColumns } from "./tableColumns";
 const { Search } = Input;
 
 export default function Driver() {
-  const column = [
-    {
-      title: "Driver Name",
-      key: "name",
-      dataIndex: "name",
-      sorter: (a, b) => a.name.localeCompare(b.name),
-      render: (name) => <h3>{name}</h3>,
-    },
-    {
-      title: "Phone Number",
-      key: "phone_number",
-      dataIndex: "phone_number",
-      sorter: (a, b) => a.phone_number.localeCompare(b.phone_number),
-      render: (phone_number) => <h3>{phone_number}</h3>,
-    },
-    {
-      title: "Created At",
-      key: "created_at",
-      dataIndex: "created_at",
-      sorter: (a, b) => a.created_at.localeCompare(b.created_at),
-      render: (created_at) => <h3>{created_at}</h3>,
-    },
-    {
-      title: "Status",
-      key: "status",
-      dataIndex: "status",
-      sorter: (a, b) => a.status.localeCompare(b.status),
-      render: (status) => <h3>{status}</h3>,
-    },
-    {
-      key: "action",
-      render: () => <Button type="primary">update</Button>,
-    },
-  ];
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const showModal = () => {
+    setIsModalVisible(true);
+  };
+
+  const hideModal = () => {
+    setIsModalVisible(false);
+  };
+
+  const AddDriverModal = (
+    <Modal
+      title="Basic Modal"
+      visible={isModalVisible}
+      onOk={hideModal}
+      onCancel={hideModal}
+    >
+      <p>Some contents...</p>
+      <p>Some contents...</p>
+      <p>Some contents...</p>
+    </Modal>
+  );
+
+  const onClickUpdate = (id) => {
+    showModal();
+    console.log(id);
+  };
+
   return (
     <div>
       <div className="driver-search_container">
@@ -49,9 +45,12 @@ export default function Driver() {
         />
       </div>
       <Table
-        columns={column}
+        columns={DriverTableColumns(onClickUpdate)}
         dataSource={drivers}
-        onChange={(sorter) => console.log(sorter)}
+        // onClickUpdate={(id) => {
+        //   showModal();
+        //   console.log(id);
+        // }}
       />
     </div>
   );
